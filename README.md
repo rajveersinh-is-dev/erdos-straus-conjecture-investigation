@@ -35,7 +35,8 @@ Statements and evidence labels: [`mathematics/main_results.md`](mathematics/main
 
 Built from four explicit identities (each verified by hand *and* by the test
 suite) and one descent lemma. `H` contains only **29 298** integers up to
-`3·10^6` — 0.098 % of all integers up to that point.
+`3·10^6` — 23.4 % of the 125 000 integers `≡ 1 (mod 24)` in that range, and
+0.98 % of all integers.
 
 ### 2.2 In the hard core, every solution is asymmetric
 
