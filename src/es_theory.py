@@ -17,12 +17,14 @@ from fractions import Fraction
 from math import gcd
 from typing import Optional
 
+
 Triple = tuple[int, int, int]
 
 
 # ---------------------------------------------------------------------------
 # Factorisation helpers (exact)
 # ---------------------------------------------------------------------------
+
 
 def factorise(m: int) -> dict[int, int]:
     """Prime factorisation {p: e} of m.  Exact trial division."""
@@ -64,6 +66,7 @@ def prime_divisors(n: int) -> list[int]:
 # ---------------------------------------------------------------------------
 # The exact criterion (Lemma 3)
 # ---------------------------------------------------------------------------
+
 
 def is_two_unit_fractions(a: int, b: int) -> bool:
     """Can the reduced fraction a/b be written as 1/y + 1/z?
@@ -112,6 +115,7 @@ def pair_from_criterion(a: int, b: int) -> Optional[tuple[int, int]]:
 # Search for a witness of the Erdős–Straus conjecture
 # ---------------------------------------------------------------------------
 
+
 def candidates_x(n: int) -> range:
     """Admissible values of the smallest denominator x.
 
@@ -143,6 +147,15 @@ def es_solution(n: int) -> Optional[Triple]:
 
 
 def es_holds(n: int) -> bool:
+    """Es holds.
+    
+    Args:
+        n:
+    
+    Returns:
+        The computed result
+    
+    """
     return es_solution(n) is not None
 
 
