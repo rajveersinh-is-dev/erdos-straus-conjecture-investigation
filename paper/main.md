@@ -14,7 +14,8 @@ lie in the *hard core*
 
         H = { n : n ≡ 1 (mod 24) and every prime divisor of n is ≡ 1 (mod 24) },
 
-a set containing 0.098 % of all integers up to three million. We then show
+a set containing 29 298 integers up to three million — 23.4 % of the integers
+`≡ 1 (mod 24)` in that range, and 0.98 % of all integers. We then show
 that inside `H` no solution can have a repeated denominator, so the
 two-denominator identities that solve every easy case are provably unavailable.
 We derive a sharp necessary-and-sufficient criterion for the smallest possible
