@@ -1,3 +1,5 @@
+"""Module for mathematical computation and analysis."""
+
 import os
 import sys
 
