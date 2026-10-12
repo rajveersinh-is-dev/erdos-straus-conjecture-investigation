@@ -102,3 +102,39 @@ solutions `(x, y, z)`. The correct figures are: minimum number of distinct `k`
 over `H ∩ [1, 6000]` is 3 (`n = 73, 193`); minimum number of full solutions
 over `H ∩ [1, 20000]` is 6 (`n = 193`). Both are now reported separately, and
 the README does not quote the ambiguous figure.
+
+## A9. A second miscount: prime powers classified as primes
+
+**The bug.** `src/es_sieve.factorise` returns a *dictionary* `prime -> exponent`.
+`exp05` split the hard core with
+
+```python
+pr = [n for n in H2 if len(factorise(n)) == 1]   # "primes"
+co = [n for n in H2 if len(factorise(n)) > 1]   # "composites"
+```
+
+`len(factorise(n)) == 1` means *one distinct prime factor*, which is true of
+every prime **power** `p^e` with `e ≥ 2` — and `p^e ∈ H` whenever `p ≡ 1 (mod 24)`.
+
+**How it was found.** An independent re-count in `experiments/exp06_recheck_headline.py`,
+written to share no code with `src/`, reported 2315 composites and 26983 primes
+while the repository said 2288 and 27010. The totals agreed (29298 both times),
+which is what made the discrepancy narrow down to the prime/composite split
+alone. Counting prime powers `p^e`, `e ≥ 2`, in `H ∩ [1, 3·10^6]` gives exactly
+27, and 2315 − 27 = 2288, 26983 + 27 = 27010. The bug was fully explained.
+
+**The fix.** `is_prime` and `is_prime_power` were added to `src/es_sieve.py`,
+with a docstring warning against the naive test; `exp05` now asserts that the
+three classes partition `H`, and `tests/test_theorems.py` gained two regression
+tests (`test_prime_classification_distinguishes_prime_powers`,
+`test_hard_core_partition_is_exhaustive`).
+
+**Corrected figures** for `H ∩ [1, 3·10^6]`: 26983 primes, 2315 composites, of
+which 27 are prime powers. The qualitative conclusion is unchanged — composites
+in the hard core have `μ ≤ 15` while primes reach `μ = 59` — but the numbers in
+the README, the paper and the journal had been wrong and are corrected.
+
+**Lesson.** Two independent miscounts in this project came from the same habit:
+trusting a helper's name for what it returns. The defence that worked both times
+was re-deriving the headline numbers with a second implementation that shares no
+code; `exp06` now lives in the repository for that purpose.

@@ -88,7 +88,7 @@ precise sense in which the file contains no unfinished proof.
 `src/es_theory.py` implements exactly this criterion over `int`. The Lean proof
 establishes the mathematical statement; it does *not* establish that the Python
 transcription of it is correct. That link is covered by the test suite
-(`tests/test_theorems.py`, 25/25 passing), which is a different kind of evidence
+(`tests/test_theorems.py`, 27/27 passing), which is a different kind of evidence
 and is labelled separately.
 
 ## 5. Honest limitations

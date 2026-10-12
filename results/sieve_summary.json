@@ -6,6 +6,11 @@
   "survivors_O1_O2_O3": 799,
   "record_limit": 3000000,
   "count_H_at_record_limit": 29298,
+  "primes_at_record_limit": 26983,
+  "prime_powers_at_record_limit": 27,
+  "composites_at_record_limit": 2315,
+  "max_mu_among_primes": 59,
+  "max_mu_among_composites": 15,
   "mu_distribution": {
     "3": 16131,
     "7": 10593,

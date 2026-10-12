@@ -333,7 +333,8 @@ Results (exact, reproducible via `experiments/`):
   118801, and none with `k < 59` exists. Corollary 12 still solves it, via
   `d = 191 | (n+1)`: `4/118801 = 1/29748 + 1/18503256 + 1/2198205316056`.
 * Composite members of `H` are markedly easier: among `H ∩ [1, 3·10^6]` the
-  2288 composite members all satisfy `μ ≤ 15`, while the 27010 prime members
+  2315 composite members all satisfy `μ ≤ 15` — the 27 of them that are prime
+  powers `p^e`, `e ≥ 2`, satisfy `μ ≤ 11` — while the 26 983 prime members
   reach `μ = 59`.
 
 These are finite-range statements. They are reported as evidence for the

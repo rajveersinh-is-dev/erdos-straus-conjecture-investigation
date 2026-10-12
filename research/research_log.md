@@ -58,8 +58,12 @@ of the work concrete.
 
 * **No repeated denominators.** Theorem 8 / Corollary 9. Verified on all
   solutions for all `n ∈ H` up to 20000.
-* **Composite vs prime.** Over `H ∩ [1, 3·10^6]`: 2288 composite members, all
-  with `μ ≤ 15`; 27010 prime members, reaching `μ = 59`. A striking asymmetry.
+* **Composite vs prime.** Over `H ∩ [1, 3·10^6]`: 2315 composite members, all
+  with `μ ≤ 15`; 26983 prime members, reaching `μ = 59`. A striking asymmetry.
+  *(These two figures were wrong at first — 2288 / 27010 — because
+  `len(factorise(n)) == 1` was used as a primality test and also matches prime
+  powers `p^e`, `e ≥ 2`. See `research/proof_attempts.md` A9. The qualitative
+  conclusion is unaffected; the numbers are corrected everywhere.)*
 * **The `k = 3` criterion is exact**, in both directions (Theorem 10).
 * **`u = 1` never works** (Theorem 11) — proved, not guessed.
 

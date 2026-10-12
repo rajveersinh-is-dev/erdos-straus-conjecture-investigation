@@ -1,10 +1,14 @@
 # The Erdős–Straus conjecture: an exact criterion, a localised hard core, and where a proof would still have to go
 
 **Repository:** <https://github.com/rajveersinh-is-dev/erdos-straus-conjecture-investigation>
+
 **Status of the headline result:** the Erdős–Straus conjecture is **not solved here**.
 What is proved is a sharp localisation of the difficulty plus a set of
 structural theorems about the surviving case, one of which is new as far as we
 can verify and none of which is advertised as more than it is.
+
+**Final report (including the verdict and the list of things that were wrong):**
+[`FINAL_REPORT.md`](FINAL_REPORT.md).
 
 ---
 
@@ -126,8 +130,10 @@ Quantitatively (COMPUTATIONALLY VERIFIED): on `H ∩ [1, 600000]` (6467 values),
 >         4/118801 = 1/29748 + 1/18503256 + 1/2198205316056 .
 >
 > **Finding (COMPUTATIONALLY VERIFIED).** Composite members of `H` are much
-> easier than prime ones: among `H ∩ [1, 3·10^6]` the 2288 composite members
-> all have `μ ≤ 15`, while the 27010 prime members reach `μ = 59`.
+> easier than prime ones: among `H ∩ [1, 3·10^6]` the 2315 composite members
+> all have `μ ≤ 15` (the maximum, at `n = 458761`; the 27 of them that are prime
+> powers `p^e`, `e ≥ 2`, have `μ ≤ 11`), while the 26983 prime members reach
+> `μ = 59`.
 
 ## 3. What we did **not** prove
 
@@ -191,8 +197,8 @@ research/        problem_selection.md, literature_review.md, research_log.md,
                  proof_attempts.md, known_results.md, evidence_labels.md,
                  counterexamples.md, incident.md
 src/             es_theory.py (Lemma 1 + Lemma 3), es_sieve.py (k-sieve)
-tests/           test_theorems.py  (25 tests, exact arithmetic)
-experiments/     exp01..exp05, all reproducible
+tests/           test_theorems.py  (27 tests, exact arithmetic)
+experiments/     exp01..exp07, all reproducible
 results/         sieve_summary.json
 paper/           main.tex (LaTeX mirror), main.md (readable version)
 lean/            ESCriterion.lean (formal proof of Lemma 3),
@@ -200,12 +206,30 @@ lean/            ESCriterion.lean (formal proof of Lemma 3),
 docs/            reproducibility.md
 ```
 
+## 7b. Known errors, found and corrected
+
+Two statistics in earlier drafts of this repository were wrong. Both were found
+by re-deriving the headline numbers with an independent implementation
+(`experiments/exp06_recheck_headline.py`, which shares no code with `src/`), and
+both are documented rather than quietly patched:
+
+* **§A8** — an experiment counted *distinct admissible `k`* where the text said
+  "number of solutions". Now reported separately: min 3 distinct `k`
+  (`n = 73, 193`) on `H ∩ [1, 6000]`, min 6 solutions (`n = 193`) on
+  `H ∩ [1, 20000]`.
+* **§A9** — `len(factorise(n)) == 1` was used as a primality test, which is also
+  true of prime powers `p^e`, `e ≥ 2`, and `p^e ∈ H` whenever `p ≡ 1 (mod 24)`.
+  This moved the hard-core prime/composite split by 27. Corrected to
+  **26 983 prime, 2 315 composite**; the qualitative conclusion is unchanged.
+
+Full write-ups: [`research/proof_attempts.md`](research/proof_attempts.md).
+
 ## 8. Dependencies and reproduction
 
 * **Python ≥ 3.10**, standard library only (`fractions`, `math`). No NumPy,
   no Sage, no internet access needed.
 * Run the tests: `python tests/test_theorems.py` (or `python -m pytest tests/ -q`).
-* Run the experiments: `python experiments/exp01_baseline.py`, … `exp05`.
+* Run the experiments: `python experiments/exp01_baseline.py`, … `exp07`.
 * Lean (optional): `cd lean && lake build && lake env lean AxiomAudit.lean` —
   builds cleanly; see `lean/BUILD_STATUS.md` and `docs/reproducibility.md`.
 
@@ -214,7 +238,7 @@ Full instructions, environment details and expected outputs:
 
 ## 9. Tests and validation
 
-`python tests/test_theorems.py` → **25/25 passing** (all arithmetic exact;
+`python tests/test_theorems.py` → **27/27 passing** (all arithmetic exact;
 `fractions.Fraction`, never floats). The tests check, among other things:
 
 * the criterion against brute-force search for all reduced `a/b`, `b ≤ 260`;
