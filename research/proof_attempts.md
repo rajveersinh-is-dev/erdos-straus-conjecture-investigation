@@ -83,9 +83,16 @@ file with `sorry`s is worse than none, because it invites false confidence.
 
 The replacement (`lean/ESCriterion.lean`) formalises **Lemma 3 only**, which is
 the single statement the entire computational side depends on. Statements with
-truncated `ℕ` subtraction are proved over `ℤ` and transferred. Whether the build
-completed in the authoring environment is reported honestly in
-`docs/reproducibility.md`; if not, the label is downgraded rather than asserted.
+truncated `ℕ` subtraction are proved over `ℤ` and transferred.
+
+**Outcome: completed.** `lake build` finishes with exit code 0 on Lean
+`v4.35.0-rc4`; `lake env lean ESCriterion.lean` emits nothing; and
+`lake env lean AxiomAudit.lean` shows `ES.criterion_iff` depending only on
+`propext`, `Classical.choice`, `Quot.sound` — in particular no `sorryAx`.
+Verbatim output is in `lean/BUILD_STATUS.md`. Two type errors found by the
+kernel during the work (`hv_pos` in `witness_gives_solution`, and the `have`
+syntax of the Bézout step) were fixed rather than bypassed; neither was patched
+with `sorry`.
 
 ## A8. Numerical artefact: a miscounted statistic
 

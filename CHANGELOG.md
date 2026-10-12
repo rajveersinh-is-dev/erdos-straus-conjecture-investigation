@@ -56,10 +56,21 @@ All notable changes to this repository. Entries record *what was actually done*.
 - **paper**: `paper/main.md` and `paper/main.tex`.
 
 ### Formalisation
-- **lean**: `ESCriterion.lean` formalising Lemma 3. Build status recorded in
-  `lean/BUILD_STATUS.md`.
+- **lean**: `ESCriterion.lean` formalising Lemma 3 over `ℤ` — both directions,
+  plus the structural lemmas `factorisation` and `dvd_of_dvd_mul_of_bezout`.
+  **Build successful**: `lake build` exits 0 on Lean `v4.35.0-rc4`
+  (`Build completed successfully (3138 jobs)`), and
+  `lake env lean ESCriterion.lean` emits no output.
+- **lean**: `AxiomAudit.lean` — kernel-level `#print axioms` check;
+  `ES.criterion_iff` depends only on `propext`, `Classical.choice`,
+  `Quot.sound`, and in particular on no `sorryAx`.
+- **lean**: `BUILD_STATUS.md` records the exact commands, toolchain and verbatim
+  output, and states plainly which statements are *not* formalised.
+- **lean**: toolchain pinned to `leanprover/lean4:v4.35.0-rc4`.
 
 ### Known not-done
 - The Erdős–Straus conjecture is **not** proved or disproved.
+- Only Lemma 3 is machine-checked. Theorems 7–14 rest on the written proofs in
+  `mathematics/proofs.md` alone.
 - `paper/main.tex` was **not** compiled (no LaTeX toolchain available).
 - No bound on `μ(n)` proved.

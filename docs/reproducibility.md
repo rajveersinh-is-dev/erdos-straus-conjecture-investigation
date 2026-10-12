@@ -11,7 +11,7 @@ access, except the optional Lean step.
 |---|---|---|
 | Python | 3.14.6 (works on ≥ 3.10) | **Standard library only.** No NumPy, no SciPy, no SageMath, no internet. |
 | Git | 2.53 | |
-| Lean 4 (optional) | 4.34.1 | plus Mathlib; only for `lean/` |
+| Lean 4 (optional) | `leanprover/lean4:v4.35.0-rc4` (pinned in `lean/lean-toolchain`) | plus Mathlib; only for `lean/` |
 
 ## 2. Getting the code
 
@@ -107,17 +107,24 @@ Total runtime: under two minutes on a single core. `exp05` writes
 
 ```bash
 cd lean
-lake exe cache get     # downloads prebuilt Mathlib oleans (~9000 files)
+lake exe cache get     # optional: prebuilt Mathlib oleans (~9000 files)
 lake build
+lake env lean AxiomAudit.lean
 ```
 
-**Honest status.** The authoring environment has Lean 4.34.1 and `lake` 5.0.0
-and fetched the Mathlib cache, but **no LaTeX toolchain and no guarantee of a
-successful build were available there**. The build outcome is recorded in
-`lean/BUILD_STATUS.md`. If that file does not record a successful
-`lake build`, the file must be treated as a formalisation *attempt* and the
-`FORMALLY VERIFIED` label in `research/evidence_labels.md` is **not** claimed
-for it.
+**Status: successful.** On 2026-10-12, with Lean `leanprover/lean4:v4.35.0-rc4`
+and `lake` 5.0.0, `lake build` finished with `Build completed successfully
+(3138 jobs)` and exit code 0, and `lake env lean ESCriterion.lean` emitted no
+errors and no warnings. The axiom audit reports `[propext, Classical.choice,
+Quot.sound]` for `ES.criterion_iff` and no `sorryAx`. The verbatim output is in
+`lean/BUILD_STATUS.md`.
+
+Because `lake exe cache get` produced oleans that did not match the revision
+pinned in `lean/lake-manifest.json`, `lake` compiled Mathlib from source. On a
+fresh machine, expect the first `lake build` to be slow (3137 Mathlib modules);
+later single-file checks take about half a minute. Re-running
+`lake env lean AxiomAudit.lean` is the cheapest independent confirmation of the
+label.
 
 Nothing else in the project depends on this step.
 

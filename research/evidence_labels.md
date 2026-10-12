@@ -16,13 +16,21 @@ labels. A stronger label is never used than the evidence supports.
 
 ## Note on the Lean status
 
-The Lean file `lean/ESCriterion.lean` is a formalisation of **Lemma 3 only** — not
-of the reduction theorem, not of the closed forms, and certainly not of the
-conjecture. Its status is reported honestly in `docs/reproducibility.md`,
-together with the exact command used and whether it was executed in the
-authoring environment. If the build did not complete there, the label is
-downgraded to *not formally verified* and the file is kept as a formalisation
-*attempt* rather than as a verified artefact.
+The Lean file `lean/ESCriterion.lean` is a formalisation of **Lemma 3 only** —
+not of the reduction theorem, not of the closed forms, and certainly not of the
+conjecture.
+
+**Status: built successfully.** `lake build` completes with exit code 0 and
+`lake env lean ESCriterion.lean` produces no output; the axiom audit in
+`lean/AxiomAudit.lean` shows that `ES.criterion_iff` depends only on `propext`,
+`Classical.choice` and `Quot.sound`, and in particular not on `sorryAx`. The
+exact commands, the toolchain version and the verbatim output are recorded in
+`lean/BUILD_STATUS.md`. The `FORMALLY VERIFIED` label is therefore claimed for
+Lemma 3 and for no other statement in this repository.
+
+The one thing the formalisation does *not* establish is that the Python
+transcription of the criterion in `src/es_theory.py` is faithful to it; that
+link rests on the test suite, which carries a different label.
 
 ## Novelty convention
 
