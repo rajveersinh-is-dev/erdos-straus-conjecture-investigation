@@ -11,7 +11,7 @@ from collections import Counter
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from es_sieve import (hard_core_values, factorise, divisors, minimal_k,  # noqa: E402
-                      es_via_k)
+                      es_via_k, is_prime, is_prime_power)
 
 OBSTR = 600_000
 REC = 3_000_000
@@ -50,13 +50,28 @@ print("   the ones needing mu > 23:", [n for k, n in hard if k and k > 23][:20])
 print("\n### prime vs composite in H")
 H2 = hard_core_values(REC)
 print(f"   hard-core values <= {REC}: {len(H2)}")
-pr = [n for n in H2 if len(factorise(n)) == 1]
-co = [n for n in H2 if len(factorise(n)) > 1]
-print(f"   primes {len(pr)}, composite {len(co)}")
-mx_pr = max(minimal_k(n, 64) or 10**9 for n in pr)
-mx_co = max(minimal_k(n, 64) or 10**9 for n in co)
-print(f"   max mu among primes    : {mx_pr}")
-print(f"   max mu among composites: {mx_co}")
+# NB: `len(factorise(n)) == 1` is NOT the same as "n is prime" -- it also holds
+# for every prime power p^e, e >= 2.  See research/proof_attempts.md, A9.
+pr = [n for n in H2 if is_prime(n)]
+pw = [n for n in H2 if is_prime_power(n)]
+co = [n for n in H2 if not is_prime(n)]
+co2 = [n for n in H2 if len(factorise(n)) > 1]      # >= 2 distinct prime factors
+print(f"   primes {len(pr)}  (of which prime p: {len(pr)})")
+print(f"   prime powers p^e, e>=2: {len(pw)}   first few: {pw[:8]}")
+print(f"   composites total {len(co)}  (= {len(co2)} with >= 2 distinct prime factors"
+      f" + {len(pw)} prime powers)")
+assert len(pr) + len(co) == len(H2), "partition failed"
+assert len(pw) + len(co2) == len(co), "sub-partition failed"
+mus_pr = {n: minimal_k(n, 64) for n in pr}
+mus_co = {n: minimal_k(n, 64) for n in co}
+mx_pr = max(v or 10**9 for v in mus_pr.values())
+mx_co = max(v or 10**9 for v in mus_co.values())
+print(f"   max mu among primes    : {mx_pr}  at "
+      f"{sorted(n for n, v in mus_pr.items() if v == mx_pr)}")
+print(f"   max mu among composites: {mx_co}  at "
+      f"{sorted(n for n, v in mus_co.items() if v == mx_co)}")
+mx_pw = max(mus_co[n] or 10**9 for n in pw)
+print(f"   max mu among the {len(pw)} prime powers: {mx_pw}")
 
 print("\n### records of mu (mu = smallest k = 3 mod 4 admitting a solution)")
 recs = sorted(((minimal_k(n, 64), n) for n in H2), reverse=True)
@@ -71,6 +86,11 @@ summary = {
     "survivors_O1_O2": both,
     "survivors_O1_O2_O3": len(triple),
     "record_limit": REC, "count_H_at_record_limit": len(H2),
+    "primes_at_record_limit": len(pr),
+    "prime_powers_at_record_limit": len(pw),
+    "composites_at_record_limit": len(co),
+    "max_mu_among_primes": mx_pr,
+    "max_mu_among_composites": mx_co,
     "mu_distribution": {str(k): v for k, v in sorted(dist.items())},
     "max_mu": recs[0][0],
     "max_mu_attained_at": [n for k, n in recs if k == recs[0][0]],

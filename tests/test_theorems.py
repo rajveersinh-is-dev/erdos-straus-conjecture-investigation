@@ -16,7 +16,7 @@ from es_theory import (es_solution, es_holds, enumerate_solutions,      # noqa: 
                        prime_divisors, divisors, factorise)
 from es_sieve import (in_hard_core, es_via_j, es_via_k, minimal_k,      # noqa: E402
                       solution_count, hard_core_values, divisors_of_square,
-                      divisors_of_factors, AB_of)
+                      divisors_of_factors, AB_of, is_prime, is_prime_power)
 
 
 # --------------------------------------------------------------------------
@@ -283,6 +283,36 @@ def test_minimum_number_of_solutions_in_hard_core():
     counts = {n: solution_count(n, 40) for n in hard_core_values(6000)}
     assert min(counts.values()) == 3
     assert [n for n, c in counts.items() if c == 3][:5] == [73, 193]
+
+
+# --------------------------------------------------------------------------
+# Regression: `len(factorise(n)) == 1` is NOT the same as "n is prime".
+# It also holds for every prime power p^e with e >= 2, and using it as a
+# primality test silently miscounted 27 members of H (research/proof_attempts.md, A9).
+# --------------------------------------------------------------------------
+def test_prime_classification_distinguishes_prime_powers():
+    for n in range(2, 4001):
+        f = factorise(n)
+        true_prime = is_prime(n)
+        assert true_prime == (len(f) == 1 and n in f), (n, f)
+        assert is_prime_power(n) == (len(f) == 1 and n not in f and n >= 4), (n, f)
+        # mutual exclusivity and exhaustiveness
+        assert not (is_prime(n) and is_prime_power(n)), n
+        assert (is_prime(n) or is_prime_power(n)) == (len(f) == 1), (n, f)
+    # the first prime powers that actually occur in H, and they really are in H
+    H = set(hard_core_values(200_000))
+    pw = sorted(n for n in H if is_prime_power(n))
+    assert pw[:5] == [5329, 9409, 37249, 58081, 97969]
+    assert all(not is_prime(n) for n in pw)
+
+
+def test_hard_core_partition_is_exhaustive():
+    H = hard_core_values(50_000)
+    pr = [n for n in H if is_prime(n)]
+    pw = [n for n in H if is_prime_power(n)]
+    rest = [n for n in H if len(factorise(n)) > 1]
+    assert len(pr) + len(pw) + len(rest) == len(H)
+    assert not set(pr) & set(pw) and not set(pr) & set(rest) and not set(pw) & set(rest)
 
 
 # --------------------------------------------------------------------------

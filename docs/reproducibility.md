@@ -26,7 +26,7 @@ cd erdos-straus-conjecture-investigation
 python tests/test_theorems.py
 ```
 
-Expected: `25/25 tests passed`, exit status 0.
+Expected: `27/27 tests passed`, exit status 0.
 
 or
 
@@ -70,10 +70,13 @@ python experiments/exp02_structure.py      # residue classes, the reduction, H, 
 python experiments/exp03_kcensus.py        # k-census; checks Theorems 10 and 11
 python experiments/exp04_closed_forms.py   # closed forms; coverage of H by F1'/F3'
 python experiments/exp05_obstruction.py    # obstruction strength; mu records to 3*10^6
+python experiments/exp06_recheck_headline.py  # independent re-derivation of the headline figures
+python experiments/exp07_prime_power_mu.py   # mu on the prime powers in H
 ```
 
-Total runtime: under two minutes on a single core. `exp05` writes
-`results/sieve_summary.json`.
+Total runtime: `exp01`–`exp04` and `exp06`–`exp07` take well under a minute on a
+single core; `exp05` is the long one (it evaluates `minimal_k` for every member
+of `H ∩ [1, 3·10^6]`). `exp05` writes `results/sieve_summary.json`.
 
 ### Key numbers these scripts produce
 
@@ -89,9 +92,11 @@ Total runtime: under two minutes on a single core. `exp05` writes
 | exp04 | closed-form instances verified exactly | 5654 |
 | exp04 | union coverage `F1' ∪ F3'` on `H ∩ [1,300000]` | 2920/3380 = 86.39 % |
 | exp05 | `H ∩ [1,600000]` size; survivors of (O1)+(O2)+(O3) | 6467; 799 (12.36 %) |
-| exp05 | `H ∩ [1,3·10^6]` size | 29298 (27010 prime, 2288 composite) |
-| exp05 | max `μ` among primes / composites | 59 / 15 |
+| exp05 | `H ∩ [1,3·10^6]` size | 29298 (26983 prime, 2315 composite, of which 27 prime powers) |
+| exp05 | max `μ` among primes / composites / prime powers | 59 / 15 / 11 |
 | exp05 | values of `H ∩ [1,3·10^6]` with no solution for `k ≤ 255` | 0 |
+| exp06 | re-derivation of the headline figures by an independent script | matches |
+| exp07 | max `μ` among the 27 prime powers of `H` | 11 |
 
 ## 5. Determinism
 

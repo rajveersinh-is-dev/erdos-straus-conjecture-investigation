@@ -28,7 +28,8 @@ from math import gcd, isqrt
 
 __all__ = ["sieve_primes", "factorise", "divisors_of_square", "divisors",
            "in_hard_core", "es_via_j", "es_via_k", "minimal_k",
-           "solution_count", "hard_core_values", "AB_of"]
+           "solution_count", "hard_core_values", "AB_of", "is_prime",
+           "is_prime_power"]
 
 
 def sieve_primes(limit: int) -> list[int]:
@@ -85,6 +86,28 @@ def in_hard_core(n: int) -> bool:
     if n < 2 or n % 24 != 1:
         return False
     return all(p % 24 == 1 for p in factorise(n))
+
+
+def is_prime(n: int) -> bool:
+    """n is prime.
+
+    Do NOT write ``len(factorise(n)) == 1``: that is true for every prime
+    *power* p^e with e >= 2 as well, and misclassifying those silently
+    corrupted a reported statistic in an earlier version of exp05 (see
+    research/proof_attempts.md, A9).
+    """
+    if n < 2:
+        return False
+    f = factorise(n)
+    return len(f) == 1 and n in f
+
+
+def is_prime_power(n: int) -> bool:
+    """n = p^e with p prime and e >= 2 (so: composite, one distinct prime)."""
+    if n < 4:
+        return False
+    f = factorise(n)
+    return len(f) == 1 and n not in f
 
 
 def AB_of(n: int, j: int) -> tuple[int, int]:

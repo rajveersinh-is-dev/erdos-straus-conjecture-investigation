@@ -140,8 +140,9 @@ respectively, and jointly **12.36 %** (799 values); of those, only **16** need
 >       4/118801 = 1/29748 + 1/18503256 + 1/2198205316056 .
 
 > **(COMPUTATIONALLY VERIFIED)** Composite members of `H` are markedly easier:
-> among `H ∩ [1, 3·10⁶]` the 2288 composite members all have `μ ≤ 15`, while
-> the 27 010 prime members reach `μ = 59`.
+> among `H ∩ [1, 3·10⁶]` the 2315 composite members all have `μ ≤ 15` (the
+> maximum, at `n = 458761`; the 27 of them that are prime powers `p^e`, `e ≥ 2`,
+> have `μ ≤ 11`), while the 26 983 prime members reach `μ = 59`.
 
 > **(COMPUTATIONALLY VERIFIED)** Coverage on `H ∩ [1, 300000]` (3380 values):
 > `k = 3` alone covers 50.8 %, `k = 23` 76.8 %, and `{3, 7, 11, 15, 23}`
