@@ -1,0 +1,32 @@
+{
+  "obstruction_limit": 600000,
+  "count_H_at_obstruction_limit": 6467,
+  "survivors_O1": 3098,
+  "survivors_O1_O2": 1652,
+  "survivors_O1_O2_O3": 799,
+  "record_limit": 3000000,
+  "count_H_at_record_limit": 29298,
+  "mu_distribution": {
+    "3": 16131,
+    "7": 10593,
+    "11": 1594,
+    "15": 327,
+    "19": 325,
+    "23": 208,
+    "27": 29,
+    "31": 61,
+    "35": 6,
+    "39": 9,
+    "43": 2,
+    "47": 8,
+    "51": 1,
+    "55": 2,
+    "59": 2
+  },
+  "max_mu": 59,
+  "max_mu_attained_at": [
+    806521,
+    118801
+  ],
+  "no_solution_below_k255": 0
+}
