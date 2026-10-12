@@ -6,8 +6,9 @@ that a buggy first implementation of the criterion misreported as unsolvable.
 import os
 import sys
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from es_theory import es_solution, es_holds, enumerate_solutions  # noqa: E402
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 
 LIMIT = 2000
 missing = [n for n in range(2, LIMIT + 1) if not es_holds(n)]
