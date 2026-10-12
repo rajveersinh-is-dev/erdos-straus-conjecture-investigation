@@ -1,0 +1,447 @@
+% LaTeX mirror of paper/main.md.
+% NOTE: no LaTeX toolchain (pdflatex) was available in the authoring
+% environment, so this file was NOT compiled here.  It is provided as faithful
+% source; paper/main.md carries the same content in Markdown.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.6cm]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{microtype}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\title{An exact criterion for the Erd\"os--Straus equation,\\
+the hard core in which its difficulty lives,\\
+and an obstruction theorem}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We investigate the Erd\"os--Straus conjecture: for every integer $n\ge 2$ do
+there exist positive integers $x,y,z$ with $4/n=1/x+1/y+1/z$? The conjecture has
+been open since 1948 and we do not resolve it. We do establish a self-contained
+set of structural results about the part of the problem that the classical
+identities do not already settle.
+
+After deriving an exact divisibility criterion for the two-unit-fraction
+equation $a/b=1/y+1/z$, we prove that any counterexample must lie in the
+\emph{hard core}
+\[
+  \mathcal H=\{n:\ n\equiv 1 \bmod 24\ \text{and every prime divisor }p
+  \text{ of } n \text{ satisfies } p\equiv 1\bmod 24\},
+\]
+a set containing $0.098\%$ of all integers up to three million. Inside
+$\mathcal H$ we show that no solution can have a repeated denominator, so the
+two-denominator identities solving every easy case are provably unavailable.
+We derive a sharp necessary-and-sufficient criterion for the smallest possible
+value of $k=4x-n$, prove that the trivial witness in the divisibility criterion
+can never succeed, give two closed-form families of solutions, and prove an
+obstruction theorem giving four explicit necessary conditions for $n$ to be a
+counterexample. Exact computation on $\mathcal H\cap[1,3\cdot 10^{6}]$ shows
+these conditions eliminate more than seven eighths of the candidates, and
+identifies the integers on which the search is hardest.
+\end{abstract}
+
+\section{Introduction}
+
+The Erd\"os--Straus conjecture, posed in 1948, asserts that for every
+$n\ge 2$ the number $4/n$ is a sum of three positive unit fractions. It is one of
+the oldest unresolved problems in elementary number theory, and it has been
+verified computationally for $n\le 10^{17}$; that verification concerns a finite
+range and contributes nothing to the general case.
+
+The classical literature attacks the problem by exhibiting parametric
+identities covering residue classes of $n$; there are hundreds of such families.
+A second, newer line studies the \emph{structure} of the solution set:
+Elsholtz--Tao obtained asymptotics for the number of solutions, and Jiang (2026)
+expressed the counts exactly in terms of divisors of $n^2$ lying in a
+prescribed residue class.
+
+We make three contributions.
+
+\begin{enumerate}
+\item \textbf{Localisation.} A clean self-contained proof that the whole
+  difficulty is confined to $\mathcal H$ --- strictly sharper than the familiar
+  ``it suffices to consider $n\equiv 1 \bmod 24$'', because it also forces
+  every prime factor.
+\item \textbf{Structure.} Inside $\mathcal H$ every solution is asymmetric
+  ($x<y<z$); we derive an exact criterion for the smallest admissible
+  $k=4x-n$, prove an impossibility result about the most obvious candidate
+  construction, and give two closed-form families.
+\item \textbf{Obstruction.} Four explicit, provable necessary conditions for
+  $n\in\mathcal H$ to be a counterexample, with their joint strength measured
+  computationally.
+\end{enumerate}
+
+The strategy is uniform and is worth stating before the technical material.
+Fix the smallest denominator $x$ of a putative solution and put $k=4x-n$. A
+short argument confines $x$ to $n/4<x\le 3n/4$, and the equation reduces to a
+\emph{two}-unit-fraction problem $1/y+1/z=4k/\bigl(n(n+k)\bigr)$, which we solve
+exactly by factoring a square. Writing $n=24m+1$ and $k=4j-1$ makes $k$ range
+over $3,7,11,\dots$ and converts the conjecture into a sequence of finite divisor
+questions about explicit linear functions of $n$.
+
+\paragraph{Honesty note.} We claim no priority for the main ideas: the divisor
+criterion is the same mathematical object appearing in Jiang (2026), and the
+parametric families of Section~\ref{sec:closed} are classical in substance. What
+we claim is a complete, checked and self-contained treatment, plus the
+structural results of Sections~\ref{sec:hardcore},
+\ref{sec:asymmetry} and~\ref{sec:obstruction}, whose novelty we assess
+conservatively.
+
+\section{The basic reduction}\label{sec:basic}
+
+Throughout, solutions are written $x\le y\le z$, and $ES(n)$ denotes the
+assertion that such a solution exists.
+
+\begin{lemma}\label{lem:window}
+If $ES(n)$ then there is a solution with $n/4<x\le 3n/4$.
+\end{lemma}
+\begin{proof}
+Since $y,z\ge x$ we have $4/n=1/x+1/y+1/z\le 3/x$, whence $x\le 3n/4$. Since
+$1/y+1/z>0$ we have $4/n>1/x$, whence $x>n/4$.
+\end{proof}
+
+\begin{lemma}
+Let $n\equiv 1\pmod 4$ and $n/4<x\le 3n/4$ with $x$ integral, and put
+$k=4x-n$. Then $k\equiv 3\pmod 4$, $1\le k\le 2n$, and
+\[
+  \frac4n-\frac1x=\frac{4k}{n(n+k)}.
+\]
+\end{lemma}
+\begin{proof}
+$k=-n\equiv 3\pmod 4$; the bounds on $k$ follow from those on $x$; the identity
+follows from $n+k=4x$.
+\end{proof}
+
+This already explains why the hard cases are $n\equiv 1\pmod 4$: there $k$ is
+forced into the residue class $3\bmod 4$.
+
+\section{An exact criterion}\label{sec:criterion}
+
+\begin{theorem}\label{thm:criterion}
+Let $a,b\ge 1$ with $\gcd(a,b)=1$. The following are equivalent: (i) there exist
+$1\le y\le z$ with $a/b=1/y+1/z$; (ii) there is a divisor $u$ of $b^2$ with
+$1\le u\le b$ and $u\equiv -b\pmod a$.
+\end{theorem}
+\begin{proof}
+(i)$\Rightarrow$(ii). From $a/b=1/y+1/z$ we get $ayz=b(y+z)$. Put $u=ay-b$ and
+$v=az-b$. Both are positive because $a/b>1/y$ and $a/b>1/z$; by construction
+$u\equiv v\equiv -b\pmod a$; and
+\[
+  uv=a\bigl(ayz-b(y+z)\bigr)+b^{2}=b^{2}.
+\]
+So $u\mid b^{2}$; and $y\le z$ gives $u\le v$, whence $u\le b$.
+
+(ii)$\Rightarrow$(i). Let $u\mid b^{2}$, $1\le u\le b$, $u\equiv -b\pmod a$,
+and put $v=b^{2}/u\ge u$. Then $v\equiv -b\pmod a$: from $uv=b^{2}$ and
+$u\equiv -b$ we get $(-b)v\equiv b^{2}\pmod a$, i.e. $b(v+b)\equiv 0\pmod a$,
+and $\gcd(a,b)=1$ gives $a\mid v+b$. Set $y=(b+u)/a$, $z=(b+v)/a$; these are
+positive integers with $y\le z$, and
+\[
+  ayz=\frac{(b+u)(b+v)}{a}=\frac{2b^{2}+b(u+v)}{a}=b(y+z).
+\]
+\end{proof}
+
+\begin{remark}
+The hypothesis $\gcd(a,b)=1$ is used in exactly one place: to deduce
+$v\equiv -b\pmod a$ from $u\equiv -b\pmod a$.
+\end{remark}
+
+\begin{corollary}\label{cor:sieve}
+Let $n=24m+1$, $j\ge 1$, $x=6m+j$ with $n/4<x\le 3n/4$, and put
+$k=4j-1$, $G=\gcd(4j-1,n(6m+j))$, $A=(4j-1)/G$, $B=n(6m+j)/G$. Then there
+exist $y,z\ge 1$ with $4/n=1/x+1/y+1/z$ if and only if some $u\mid B^{2}$
+satisfies $u\le B$ and $u\equiv -B\pmod A$; in that case
+$y=(B+u)/A$ and $z=(B+B^{2}/u)/A$.
+\end{corollary}
+
+This converts the Diophantine question into a finite divisor computation, which
+is why the experiments of Section~\ref{sec:comp} --- $29\,298$ hard-core
+integers --- run in seconds.
+
+\section{Localisation: the hard core}\label{sec:hardcore}
+
+\begin{lemma}\label{lem:descent}
+If $ES(d)$ then $ES(n)$ for every multiple $n$ of $d$.
+\end{lemma}
+\begin{proof}
+Write $n=kd$ and $4/d=1/x+1/y+1/z$; multiply by $1/k$.
+\end{proof}
+
+\begin{theorem}\label{thm:reduction}
+$ES(n)$ holds for every $n$ not in $\mathcal H$.
+\end{theorem}
+\begin{proof}
+Four identities, verified directly:
+\begin{enumerate}
+\item[(I1)] $2\mid n$: $4/n=1/(n/2)+1/n+1/n$.
+\item[(I2)] $n\equiv 3\pmod 4$: with $x=(n+1)/4$ and $y=z=n(n+1)/2$,
+      $1/x+1/y+1/z=4/(n+1)+4/\bigl(n(n+1)\bigr)=4/n$.
+\item[(I3)] $n\equiv 5\pmod 8$: with $x=(3n+1)/8$, $y=2x$, $z=2nx$,
+      $1/x+1/(2x)+1/(2nx)=(3n+1)/(2nx)=8x/(2nx)=4/n$.
+\item[(I4)] $n\equiv 5\pmod{12}$: with $x=(n+3)/4$ (so $x\equiv 2\pmod 3$),
+      $y=n(x+1)/3$, $z=nx(x+1)/3$,
+      $1/x+3/\bigl(n(x+1)\bigr)+3/\bigl(nx(x+1)\bigr)=1/x+3/(nx)=4/n$.
+\end{enumerate}
+Suppose $ES(n)$ fails. Then $n$ is odd by (I1), $n\equiv 1\pmod 4$ by (I2),
+$n\equiv 1\pmod{12}$ by (I4), and $n\equiv 1\pmod 8$ by (I3); hence
+$n\equiv 1\pmod{24}$. For any prime $p\mid n$, Lemma~\ref{lem:descent} forces
+$ES(p)$ to fail, and repeating the above gives $p\equiv 1\pmod{24}$. So
+$n\in\mathcal H$.
+\end{proof}
+
+\begin{remark}
+The classical statement is ``it suffices to consider $n\equiv 1\pmod{24}$''.
+Theorem~\ref{thm:reduction} is strictly sharper: it forces every prime factor
+to be $\equiv 1\pmod{24}$ as well. The price is two extra identities, (I3) and
+(I4).
+\end{remark}
+
+\section{Asymmetry in the hard core}\label{sec:asymmetry}
+
+\begin{theorem}\label{thm:repeat}
+Let $n\equiv 1\pmod 4$ be odd. Then $ES(n)$ has a solution with $y=z$ if and
+only if $n$ has a prime divisor $\equiv 3\pmod 4$; and the same equivalence
+holds with $x=y$ in place of $y=z$.
+\end{theorem}
+\begin{proof}
+\emph{(a)} Suppose $4/n=1/x+2/y$ with $x\le y$ and put $k=4x-n$. Then $k$ is odd,
+$k\equiv 3\pmod 4$, and $k/(nx)=2/y$ gives $k\mid 2nx$, hence
+$k\mid n(n+k)$, hence $k\mid n^{2}$; and $x\le y=2nx/k$ gives $k\le 2n$.
+Conversely, if $k\mid n^{2}$, $k\equiv 3\pmod 4$ and $k\le 2n$, then
+$x=(n+k)/4$ is integral with $n/4<x\le 3n/4$, $k\mid 2nx$ follows, and
+$y=2nx/k\ge x$ gives the solution. Finally $k\mid n^{2}$ with
+$k\equiv 3\pmod 4$ forces some prime $q\equiv 3\pmod 4$ to divide $k$, hence
+$n$; conversely if $p\equiv 3\pmod 4$ divides $n$ then $k=p$ works since
+$p\le n\le 2n$.
+
+\emph{(b)} Suppose $4/n=2/x+1/z$ with $x\le z$. Then $4x-2n>0$ divides $nx$; put
+$t=2x-n>0$, which is odd. Then $2t\mid n(n+t)/2$, i.e. $4t\mid n(n+t)$, whence
+$t\mid n^{2}$; since $n$ is odd, $4\mid n+t$ gives $t\equiv 3\pmod 4$; and
+$x\le z=nx/(2t)$ gives $t\le n/2$. Conversely these conditions suffice, with
+$x=(n+t)/2$ and $z=nx/(2t)$. Such a $t$ exists iff $n$ has a prime divisor
+$\equiv 3\pmod 4$; note here that $p\le n/2$ automatically, because
+$p>n/2$ would force $n=p\equiv 3\pmod 4$.
+\end{proof}
+
+\begin{corollary}\label{cor:asym}
+If $n\in\mathcal H$ then every solution of $n$ is asymmetric: $x<y<z$.
+\end{corollary}
+\begin{proof}
+$\mathcal H$ consists of odd $n\equiv 1\pmod 4$ all of whose prime divisors are
+$\equiv 1\pmod{24}$, hence $\equiv 1\pmod 4$. Theorem~\ref{thm:repeat} excludes
+$y=z$ and $x=y$; and $x=z$ forces all three equal.
+\end{proof}
+
+\paragraph{Interpretation.}
+Inside the hard core the equation $4/n=1/x+2/y$ --- the form that solves (I1),
+(I2) and most easy cases --- is \emph{never} solvable.
+
+\section{The $k$-sieve}\label{sec:sieve}
+
+\begin{theorem}\label{thm:k3}
+Let $n\in\mathcal H$ and $x=(n+3)/4$. Then there is a solution with
+$4x-n=3$ if and only if $(n+3)/4$ has a prime divisor $\equiv 2\pmod 3$.
+\end{theorem}
+\begin{proof}
+By Corollary~\ref{cor:sieve} with $j=1$: $3\nmid n$ because $n\equiv 1\pmod 3$
+and $3\nmid x$ because $x=6m+1$; so $A=3$, $B=nx\equiv 1\pmod 3$, and a
+solution exists iff $B^{2}$ has a divisor $u\le B$ with $u\equiv 2\pmod 3$.
+Such a $u$ exists iff $B$ has a prime divisor $\equiv 2\pmod 3$: one direction
+by taking $u$ to be that prime, the other because a number $\equiv 2\pmod 3$
+must have such a prime factor. Finally every prime divisor of $n$ is
+$\equiv 1\pmod 3$, so $B=nx$ has one iff $x$ does. The ordering $x\le y$ holds
+because $y-x=\bigl(x(n-3)+q\bigr)/3>0$ for $n\ge 3$.
+\end{proof}
+
+For a general $n\equiv 1\pmod{24}$ the same proof gives: a solution with
+$4x-n=3$ exists iff $n$ \emph{or} $(n+3)/4$ has a prime divisor
+$\equiv 2\pmod 3$.
+
+\begin{theorem}\label{thm:noone}
+Let $n\equiv 1\pmod{24}$ and $k\equiv 3\pmod 4$ with $\gcd(k,n)=1$. Then
+$k\nmid n^{2}+4$; consequently the witness $u=1$ of
+Corollary~\ref{cor:sieve} never applies.
+\end{theorem}
+\begin{proof}
+Put $x=(n+k)/4$; then $\gcd(k,x)=1$ because $4x=n+k$, so $A=k$ and $B=nx$. The
+witness $u=1$ requires $k\mid nx+1$, and since $4nx=n(n+k)\equiv n^{2}\pmod k$
+this is equivalent to $k\mid n^{2}+4$. Now $n$ is odd, so $n^{2}+4$ is odd; if
+$p\mid n^{2}+4$ is prime then $(n\cdot 2^{-1})^{2}\equiv -1\pmod p$, so $-1$
+is a quadratic residue mod $p$ and $p\equiv 1\pmod 4$. Every divisor of
+$n^{2}+4$ is therefore $\equiv 1\pmod 4$, and $k\equiv 3\pmod 4$ cannot divide
+it.
+\end{proof}
+
+\paragraph{Interpretation.} The most obvious construction --- splitting the
+second term without using any factor of $n$ --- is not merely unhelpful, it is
+impossible.
+
+\section{Closed-form families}\label{sec:closed}
+
+\begin{theorem}\label{thm:closed}
+Let $n\equiv 1\pmod 4$, $d\ge 3$, $d\equiv 3\pmod 4$, $\gcd(d,n)=1$ and
+$x=(n+d)/4$. Then
+\begin{enumerate}
+\item[(F1\kern-.2ex\prime)] if $d\mid n+4c$ for some $c$ with $1\le c\le x$ and
+  $c\mid x^{2}$, then $ES(n)$;
+\item[(F3\kern-.2ex\prime)] if $d\mid n+c$ for some $c$ with $1\le c\le n$ and
+  $c\mid n^{2}$, then $ES(n)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Then $\gcd(d,x)=1$ and $G=1$, so $A=d$, $B=nx$. For (F1\kern-.2ex\prime) take
+$u=nc$: then $u\mid B^{2}$ (as $c\mid x^{2}$), $u\le B$ (as $c\le x$), and
+$nc\equiv -nx\pmod d$ because $\gcd(x,d)=1$ and $4c\equiv -4x\equiv -n\pmod d$.
+For (F3\kern-.2ex\prime) take $u=xc$, using $\gcd(x,d)=1$ and $c\equiv -n\pmod d$.
+Apply Corollary~\ref{cor:sieve}.
+\end{proof}
+
+\begin{corollary}
+Under the hypotheses of Theorem~\ref{thm:closed}: if $d\mid n+4$ then
+\[
+  \frac4n=\frac1x+\frac{1}{n(x+1)/d}+\frac{1}{nx(x+1)/d};
+\]
+if $d\mid n+1$ then
+\[
+  \frac4n=\frac1x+\frac{1}{x(n+1)/d}+\frac{1}{nx(n+1)/d}.
+\]
+\end{corollary}
+\begin{proof}
+Specialise to $c=1$ in Theorem~\ref{thm:closed}; or verify directly, since both
+reduce to $1/x+d/(nx)=4/n$ using $4x=n+d$.
+\end{proof}
+
+Examples: $4/5=1/2+1/4+1/20$ ($d=3\mid 9$),
+$4/13=1/5+1/10+1/130$ ($d=7\mid 14$),
+$4/17=1/5+1/34+1/170$ ($d=3\mid 21$).
+
+\section{An obstruction theorem}\label{sec:obstruction}
+
+\begin{theorem}\label{thm:obstr}
+Let $n\in\mathcal H$ and suppose $ES(n)$ fails. Then
+\begin{enumerate}
+\item[(O1)] every prime divisor of $(n+3)/4$ is $\equiv 1\pmod 3$;
+\item[(O2)] every odd prime divisor of $n+1$ is $\equiv 1\pmod 4$;
+\item[(O3)] every prime divisor of $n+4$ is $\equiv 1\pmod 4$;
+\item[(O4)] for every $k\equiv 3\pmod 4$ with $k<73$, the integer
+  $B_k=n(n+k)/4$ has no divisor $u$ with $1\le u\le B_k$ and
+  $u\equiv -B_k\pmod k$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(O1) is Theorem~\ref{thm:k3} read contrapositively, together with
+$3\nmid (n+3)/4$. For (O2): if an odd prime $q\equiv 3\pmod 4$ divided $n+1$
+then $\gcd(q,n)=1$ and the previous corollary would give $ES(n)$. For (O3): if
+$q\equiv 3\pmod 4$ divided $n+4$ then $n+4$ is odd so $q$ is odd, and
+$\gcd(q,n)=1$ (else $q\mid 4$), again giving $ES(n)$. (O4) is
+Corollary~\ref{cor:sieve} read contrapositively; the condition $\gcd(k,n)=1$ is
+automatic for $k<73$, since every prime divisor of $n$ is $\equiv 1\pmod{24}$
+and hence $\ge 73$.
+\end{proof}
+
+\section{Computation}\label{sec:comp}
+
+All computations use exact integer arithmetic; no floating point is involved.
+The algorithm is Corollary~\ref{cor:sieve}: for each $k=4j-1$, factor
+$B=n(n+k)/G$ and test its divisors of $B^{2}$ against the congruence.
+
+\begin{itemize}
+\item $ES(n)$ holds for every $n\le 2000$, and for every $n\le 20000$ outside
+  $\mathcal H$.
+\item $\lvert\mathcal H\rvert=3380$ up to $300\,000$ and $29\,298$ up to
+  $3\cdot 10^{6}$.
+\item Theorem~\ref{thm:k3} was verified with \textbf{zero} mismatches against
+  brute force on all $3380$ hard-core values up to $300\,000$; so was
+  Theorem~\ref{thm:noone}.
+\item Coverage by a single $k$ on $\mathcal H\cap[1,300\,000]$:
+  $k=3$ covers $50.8\%$, $k=7$ $75.5\%$, $k=15$ $74.1\%$, $k=23$ $76.8\%$.
+  The set $\{3,7,11,15,23\}$ covers $3348$ of $3380$ ($99.05\%$).
+\item The closed forms together cover $2920$ of $3380$ ($86.4\%$).
+\item On $\mathcal H\cap[1,600\,000]$ ($6467$ values), (O1), (O2), (O3) alone
+  leave $47.9\%$, $53.1\%$, $51.6\%$, and jointly \textbf{$12.36\%$}; of the
+  $799$ survivors only $16$ need $\mu(n)>23$.
+\item \textbf{No hard-core integer up to $3\cdot 10^{6}$ lacks a solution with
+  $k\le 255$.}
+\item With $\mu(n)$ the smallest admissible $k$: $\mu$ reaches $59$, attained at
+  exactly $n=118\,801$ and $n=806\,521$. In particular
+  \[
+    \frac{4}{118\,801}=\frac1{29\,715}+\frac1{59\,875\,704}
+                       +\frac1{84\,724\,121\,160}
+  \]
+  is the \emph{first} solution of $118\,801$, and none with $k<59$ exists. The
+  closed form still solves it, via $d=191\mid n+1$:
+  \[
+    \frac{4}{118\,801}=\frac1{29\,748}+\frac1{18\,503\,256}
+                       +\frac1{2\,198\,205\,316\,056}.
+  \]
+\item Composite members of $\mathcal H$ are markedly easier: among
+  $\mathcal H\cap[1,3\cdot 10^{6}]$ the $2288$ composite members all satisfy
+  $\mu\le 15$, while the $27\,010$ prime members reach $\mu=59$.
+\end{itemize}
+
+These are finite-range statements, reported as evidence for the structure
+described above and never used as proof of a universal claim.
+
+\section{What remains open}
+
+The conjecture itself. By Theorem~\ref{thm:reduction} it is equivalent to $ES(n)$
+for every $n\in\mathcal H$, and $\mathcal H$ contains every prime
+$p\equiv 1\pmod{24}$.
+
+Every criterion proved above asks whether some explicit integer built from $n$
+--- $(n+3)/4$, $n+1$, $n+4$, $n(n+k)/4$ --- has a prime divisor in a prescribed
+residue class modulo a small $k$. For $n\in\mathcal H$ those integers are large
+and their residue-class structure is precisely what is uncontrolled. That, and
+not any computational limitation, is where a proof would have to live.
+
+Three specific open questions:
+\begin{enumerate}
+\item Is $\mu$ bounded on $\mathcal H$? (It reaches $59$ on the tested range.)
+\item Is there $n\in\mathcal H$ with no solution for any $k<100$?
+\item Is every composite $n\in\mathcal H$ solvable with $k\le 15$? Verified on
+  $\mathcal H\cap[1,3\cdot 10^{6}]$; a proof would be a genuine advance.
+\end{enumerate}
+
+\section*{Relation to prior work}
+
+The divisor criterion of Theorem~\ref{thm:criterion} is the same mathematical
+object as the ``divisors of $n^{2}$ in a single residue class modulo
+$e_n$''`` appearing in the counting identity of Jiang (2026). The parametric
+identities of Section~\ref{sec:closed} are classical in substance. We make no
+claim of priority.
+
+\begin{thebibliography}{9}
+\bibitem{ES48} P.~Erd\H{o}s and E.~G.~Straus.
+  \emph{On a Diophantine equation of Erd\H{o}s and Straus.}
+  Acta Arith.\ \textbf{3} (1948), 363--367.
+
+\bibitem{ET11} C.~Elsholtz and T.~Tao.
+  \emph{Counting the number of solutions to the Erd\H{o}s--Straus equation on
+  unit fractions.} arXiv:1107.1010 (2011).
+
+\bibitem{L24} M.~A.~Lopez.
+  \emph{A Complete Congruence System for the Erd\H{o}s--Straus Conjecture.}
+  arXiv:2404.01508 (2024).
+
+\bibitem{BH26} M.~Bello-Hern\'andez.
+  \emph{A Divisor Parametrization for the Erd\H{o}s--Straus Conjecture.}
+  arXiv:2606.10922 (2026).
+
+\bibitem{J26} X.~Jiang.
+  \emph{Counting Type I and Type II solutions of the Erd\H{o}s--Straus
+  equation: concentration, local obstructions, and a pointwise comparison.}
+  arXiv:2609.09204 (2026).
+\end{thebibliography}
+
+\end{document}
