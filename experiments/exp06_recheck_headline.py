@@ -2,8 +2,11 @@
 FINAL_REPORT.md. This script deliberately shares no code with src/: it is a
 second opinion, not a restatement.
 """
+from __future__ import annotations
+
 from fractions import Fraction
 from math import isqrt
+
 
 N = 3_000_000
 
@@ -31,7 +34,16 @@ for j in range(2, N + 1):
         spf[j] = j
 
 
-def in_hard_core(m):
+def in_hard_core(m) -> bool:
+    """In hard core.
+    
+    Args:
+        m:
+    
+    Returns:
+        bool: Result of type bool
+    
+    """
     if m < 24 or m % 24 != 1:
         return False
     t = m
