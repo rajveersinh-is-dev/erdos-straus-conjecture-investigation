@@ -10,140 +10,162 @@ Every computational statement in the Python code of this repository is a
 consequence of this equivalence, so verifying it removes the main
 "trust the program" dependency from the project.
 
-Direction 1 (solution ⇒ witness) is formalised in `ℤ` (where subtraction is
-genuine) and then transferred to `ℕ`; direction 2 (witness ⇒ solution) is
-formalised directly in `ℕ`.
+The statement is phrased over the integers so that subtraction is genuine
+(no truncated subtraction in `N`). Since all variables are assumed positive it
+is equivalent to the `N`-statement in the paper; positivity appears explicitly
+in the hypotheses `0 < a`, `0 < b`, `0 < u` and in the conclusions
+`0 < y`, `0 < z`.
+
+Coprimality is entered through Bezout's identity,
+
+    Bezout a b  :  exists s t : Z,  s * a + t * b = 1 ,
+
+which for `a, b > 0` is equivalent to `gcd a b = 1`. This is exactly the
+hypothesis of Lemma 3, and it is used in exactly one place: to cancel `b` from
+`a | b * (b + v)`.
 -/
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Nat.GCD.Basic
+import Mathlib.Data.Int.GCD
 import Mathlib.Tactic
 
 namespace ES
 
-open Nat
-
 /-- Cleared-denominator form of `a/b = 1/y + 1/z`. -/
-def IsTwoUnitFraction (a b y z : ℕ) : Prop :=
-  b * (y + z) = a * y * z
+def TwoUF (a b y z : Int) : Prop := b * (y + z) = a * y * z
 
 /-- The witness condition of Lemma 3. -/
-def IsWitness (a b u : ℕ) : Prop :=
-  0 < u ∧ u ∣ b ^ 2 ∧ u ≤ b ∧ a ∣ b + u
+def IsWitness (a b u : Int) : Prop :=
+  0 < u /\ Dvd.dvd u (b ^ 2) /\ u <= b /\ Dvd.dvd a (b + u)
 
-/-! ## The algebraic core, over the integers -/
+/-- Bezout form of `gcd a b = 1`. -/
+def Bezout (a b : Int) : Prop :=
+  Exists fun s : Int => Exists fun t : Int => s * a + t * b = 1
 
-theorem factorisation_int
-    (hab : Nat.gcd a b = 1) (h : IsTwoUnitFraction a b y z)
-    (hy : b < a * y) (hz : b < a * z) :
-    ((a : ℤ) * y - b) * ((a : ℤ) * z - b) = (b : ℤ) ^ 2 := by
-  have key : ((a : ℤ) * y - b) * ((a : ℤ) * z - b)
-      = (a : ℤ) * ((a : ℤ) * y * z - b * (y + z)) + (b : ℤ) ^ 2 := by ring
-  rw [key, h]
-  ring
+/-! ### The algebraic core -/
 
-theorem factorisation_nat (h : IsTwoUnitFraction a b y z)
-    (hy : b < a * y) (hz : b < a * z) :
+theorem factorisation {a b y z : Int} (h : TwoUF a b y z) :
     (a * y - b) * (a * z - b) = b ^ 2 := by
-  have hz_int : (b : ℤ) < (a : ℤ) * y := by exact_mod_cast hy
-  have hz2_int : (b : ℤ) < (a : ℤ) * z := by exact_mod_cast hz
-  have h_int : (b : ℤ) * (y + z) = (a : ℤ) * y * z := by exact_mod_cast h
-  have := factorisation_int (a := a) (b := b) (y := y) (z := z)
-    (Nat.gcd_a_of_dvd_of_dvd h.2 h.2) h_int hz_int hz2_int
-  rw [Nat.cast_sub hz_int, Nat.cast_sub hz2_int, Nat.cast_pow, Nat.cast_mul,
-    Nat.cast_mul, Nat.cast_mul] at this
-  exact_mod_cast this
+  calc
+    (a * y - b) * (a * z - b) = a * (a * y * z - b * (y + z)) + b ^ 2 := by ring
+    _ = b ^ 2 := by rw [h]; ring
 
-/-! ## Direction 1: a solution produces a witness -/
-
-theorem solution_gives_witness (h : IsTwoUnitFraction a b y z) (hyz : y ≤ z)
-    (hy : b < a * y) (hz : b < a * z) :
-    IsWitness a b (a * y - b) := by
-  refine ⟨by omega, factorisation_nat h hy hz, ?_, ?_⟩
-  · -- u <= b, because u * (a*z-b) = b^2 and u <= a*z-b
-    have huz : a * y - b ≤ a * z - b := by omega
-    have h2 : (a * y - b) * (a * y - b) ≤ (a * y - b) * (a * z - b) :=
-      Nat.mul_le_mul_left _ huz
-    rw [factorisation_nat h hy hz] at h2
-    nlinarith
-  · -- a | (b + (a*y - b)) because that is a*y
-    have : b + (a * y - b) = a * y := by omega
-    rw [this]
-    exact ⟨y, rfl⟩
-
-/-! ## Direction 2: a witness produces a solution -/
-
-theorem witness_dvd_bv (huv : u * v = b ^ 2) (hu : a ∣ b + u) :
-    a ∣ b + v := by
-  have hmul : a ∣ b * (b + v) := by
+/-- Cancellation of a coprime factor, via Bezout. -/
+theorem dvd_of_dvd_mul_of_bezout {a b c : Int} (h : Dvd.dvd a (b * c))
+    (hbz : Bezout a b) : Dvd.dvd a c := by
+  obtain ⟨s, t, hst⟩ := hbz
+  have h1 : Dvd.dvd a (s * a * c) := by
+    refine ⟨s * c, ?_⟩
+    ring
+  have h2 : Dvd.dvd a (t * (b * c)) := by
+    have hstep : t * (b * c) = (b * c) * t := by ring
+    rw [hstep]
+    exact h.mul_right t
+  have hid : c = s * a * c + t * (b * c) := by
     calc
-      a ∣ v * (b + u) := Nat.dvd_mul_right hu
-      _ = b * (b + v) := by rw [huv]; ring
-  exact Nat.Coprime.dvd_of_dvd_mul_left (Nat.Coprime.symm (Nat.gcd_coprime a b).symm) hmul
+      c = (s * a + t * b) * c := by rw [hst]; ring
+      _ = s * a * c + t * (b * c) := by ring
+  rw [hid]
+  exact h1.add h2
 
-theorem witness_gives_solution (hab : Nat.gcd a b = 1) (hu : u ≤ b)
-    (hw : u ∣ b ^ 2) (huv : u ∣ b + u) :
-    IsTwoUnitFraction a b ((b + u) / a) ((b + v) / a) := by
-  obtain ⟨v, rfl⟩ := hw
-  have huv' : u * (b ^ 2 / u) = b ^ 2 := Nat.mul_div_cancel' hw
-  have hle : u ≤ b ^ 2 / u := by
-    have : u ≤ b := hu
-    have := Nat.div_le_iff_le_mul (by omega : 0 < u)
-    have hb2 : u ≤ b * b := Nat.mul_le_mul_right u hu
-    omega
-  have hbv : a ∣ b + (b ^ 2 / u) := by
-    refine witness_dvd_bv huv' huv |>.resolve_right (Nat.gcd_coprime a b) |>.symm ▸ rfl
+/-! ### Direction 1: a solution yields a witness -/
+
+theorem solution_gives_witness {a b y z : Int} (ha : 0 < a) (hb : 0 < b)
+    (h : TwoUF a b y z) (hyz : y <= z) (hy : b < a * y) (_hz : b < a * z) :
+    IsWitness a b (a * y - b) := by
+  refine ⟨by linarith, ?_, ?_, by simp⟩
+  · have h1 : Dvd.dvd (a * y - b) ((a * y - b) * (a * z - b)) :=
+      (Int.dvd_refl (a * y - b)).mul_right (a * z - b)
+    rw [factorisation h] at h1
+    exact h1
+  · have hle : a * y <= a * z := mul_le_mul_of_nonneg_left hyz ha.le
+    have hu0 : 0 <= a * y - b := by linarith
+    have huz : a * y - b <= a * z - b := by linarith
+    have h2 : (a * y - b) * (a * y - b) <= (a * y - b) * (a * z - b) :=
+      mul_le_mul_of_nonneg_left huz hu0
+    rw [factorisation h] at h2
+    nlinarith
+
+/-! ### Direction 2: a witness yields a solution -/
+
+theorem witness_gives_solution {a b u : Int} (ha : 0 < a) (hb : 0 < b) (hu0 : 0 < u)
+    (hbz : Bezout a b) (huv : Dvd.dvd u (b ^ 2)) (hu_le : u <= b)
+    (hcong : Dvd.dvd a (b + u)) :
+    Exists fun y : Int => Exists fun z : Int =>
+      0 < y /\ 0 < z /\ y <= z /\ TwoUF a b y z := by
+  obtain ⟨v, hv⟩ := huv                       -- hv : b ^ 2 = u * v
+  have hv_pos : 0 < v := by
+    by_contra hc
+    have hv' : v ≤ 0 := le_of_not_gt hc
+    have hmul0 : u * v ≤ u * 0 := mul_le_mul_of_nonneg_left hv' hu0.le
+    have h1 : b ^ 2 ≤ 0 := hv ▸ (by rwa [mul_zero] at hmul0 : u * v ≤ 0)
+    have hb2 : 0 < b ^ 2 := sq_pos_of_pos hb
+    linarith
+  have hmul : Dvd.dvd a (b * (b + v)) := by
+    have h1 : Dvd.dvd a ((b + u) * v) := hcong.mul_right v
+    rwa [show (b + u) * v = b * (b + v) from by nlinarith [hv]] at h1
+  have hbv : Dvd.dvd a (b + v) := dvd_of_dvd_mul_of_bezout hmul hbz
+  obtain ⟨y, hy⟩ := hcong                     -- hy : b + u = a * y
+  obtain ⟨z, hz⟩ := hbv                       -- hz : b + v = a * z
+  refine ⟨y, z, ?_, ?_, ?_, ?_⟩
+  · by_contra hc
+    have hy' : y <= 0 := le_of_not_gt hc
+    have hneg : a * y <= 0 := mul_nonpos_of_nonneg_of_nonpos ha.le hy'
+    have hpos : 0 < b + u := by linarith
+    linarith
+  · by_contra hc
+    have hz' : z <= 0 := le_of_not_gt hc
+    have hneg : a * z <= 0 := mul_nonpos_of_nonneg_of_nonpos ha.le hz'
+    have hpos : 0 < b + v := by linarith
+    linarith
+  · have huv_le : u <= v := by
+      by_contra hc
+      have hlt : v * u < u * u := mul_lt_mul_of_pos_right (lt_of_not_ge hc) hu0
+      have hsq : u ^ 2 <= b ^ 2 := by nlinarith [hu_le]
+      nlinarith [hlt, hsq, hv]
+    have hle : b + u <= b + v := by linarith
+    rw [hy, hz] at hle
+    have h1 : 0 <= z - y := by
+      by_contra hc
+      have h2 : z - y < 0 := by linarith
+      have h3 : a * (z - y) < 0 := mul_neg_of_pos_of_neg ha h2
+      linarith
+    linarith
+  · have key : a * y * z * a = b * (y + z) * a := by
+      calc
+        a * y * z * a = (a * y) * (a * z) := by ring
+        _ = (b + u) * (b + v) := by rw [hy, hz]
+        _ = b * (2 * b + u + v) := by nlinarith [hv]
+        _ = b * ((b + u) + (b + v)) := by ring
+        _ = b * (a * y + a * z) := by rw [hy, hz]
+        _ = b * (y + z) * a := by ring
+    exact (mul_right_cancel₀ ha.ne' key).symm
+
+/-! ### The criterion, in full -/
+
+theorem criterion_iff {a b : Int} (ha : 0 < a) (hb : 0 < b) (hbz : Bezout a b) :
+    (Exists fun y : Int => Exists fun z : Int =>
+        0 < y /\ 0 < z /\ y <= z /\ TwoUF a b y z)
+      <-> Exists fun u : Int =>
+        0 < u /\ Dvd.dvd u (b ^ 2) /\ u <= b /\ Dvd.dvd a (b + u) := by
   constructor
-  · show b * ((b + u) / a + (b ^ 2 / u) / a) = a * ((b + u) / a) * ((b ^ 2 / u) / a)
-    have e1 : a * ((b + u) / a) = b + u := Nat.mul_div_cancel' huv
-    have e2 : a * ((b ^ 2 / u) / a) = b + (b ^ 2 / u) := Nat.mul_div_cancel' hbv
-    rw [e1, e2]
-    have hkey : (b + u) * (b + b ^ 2 / u)
-        = b * ((b + u) / a + (b + b ^ 2 / u) / a) * a + b ^ 2 := by
-      have h4 : (b + u) * (b ^ 2 / u) = b ^ 2 := huv'
-      omega
-    nlinarith [hkey]
-  · omega
-
-/-! ## The criterion, in full -/
-
-theorem criterion_iff (hab : Nat.gcd a b = 1) :
-    (∃ y z : ℕ, 1 ≤ y ∧ 1 ≤ z ∧ y ≤ z ∧ IsTwoUnitFraction a b y z)
-      ↔ ∃ u : ℕ, 0 < u ∧ u ∣ b ^ 2 ∧ u ≤ b ∧ a ∣ b + u := by
-  constructor
-  · rintro ⟨y, z, _, hyz, h⟩
-    refine ⟨a * y - b, ?_⟩
+  · rintro ⟨y, z, hy0, hz0, hyz, h⟩
+    have h' : b * (y + z) = a * y * z := h
+    have hby : 0 < b * y := mul_pos hb hy0
+    have hbz : 0 < b * z := mul_pos hb hz0
     by_cases hy : b < a * y
-    · exact solution_gives_witness h hyz hy (by
-        have : a * y * z = b * (y + z) := h.symm
-        omega)
-    · have : a * y ≤ b := by omega
-      exfalso
-      have : b * (y + z) = a * y * z := h
-      have hz : a * z ≤ b := by
-        by_contra hz
-        push_neg at hz
-        have : a * y * z > b * z := Nat.mul_lt_mul_right z hy
-        omega
-      omega
-  · rintro ⟨u, hu0, hdiv, hule, hucongr⟩
-    obtain ⟨v, hv⟩ := hdiv
-    refine ⟨(b + u) / a, b ^ 2 / u, ?_⟩
-    · have : a ∣ b + u := hucongr
-      have : a ≤ b + u := Nat.le_of_dvd (by positivity) hucongr
-      omega
-    · have : 0 < b + (b ^ 2 / u) := by positivity
-      have : a ∣ b + (b ^ 2 / u) := witness_dvd_bv hv hucongr
-      exact this
-    · have : a ∣ b + (b ^ 2 / u) := witness_dvd_bv hv hucongr
-      have h1 : u ≤ b ^ 2 / u := by
-        by_contra hc
-        have : u > b ^ 2 / u := by omega
-        have : u * (b ^ 2 / u) < u * u := Nat.mul_lt_mul_right u hc
-        rw [hv] at this
-        omega
-      have e1 : a * ((b + u) / a) = b + u := Nat.mul_div_cancel' hucongr
-      have e2 : a * ((b ^ 2 / u) / a) = b + (b ^ 2 / u) := Nat.mul_div_cancel' this
-      omega
-    · exact witness_gives_solution hab hule hv hucongr
+    · refine ⟨a * y - b, ?_⟩
+      by_cases hz : b < a * z
+      · exact solution_gives_witness ha hb h hyz hy hz
+      · exfalso
+        have h1 : a * z <= b := le_of_not_gt hz
+        have h2 : a * z * y <= b * y := mul_le_mul_of_nonneg_right h1 hy0.le
+        have h3 : a * y * z = a * z * y := by ring
+        rw [← h3] at h2
+        linarith
+    · exfalso
+      have h1 : a * y <= b := by linarith
+      have h2 : a * y * z <= b * z := mul_le_mul_of_nonneg_right h1 hz0.le
+      linarith
+  · rintro ⟨u, hu0, hdiv, hule, hcong⟩
+    exact witness_gives_solution ha hb hu0 hbz hdiv hule hcong
 
 end ES

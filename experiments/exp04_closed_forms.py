@@ -1,4 +1,4 @@
-﻿"""exp04 - closed-form families F1'/F3' (Theorem 12, Corollary 13) and their
+"""exp04 - closed-form families F1'/F3' (Theorem 12, Corollary 13) and their
 coverage of the hard core.
 
 F1' : d = 3 mod 4, gcd(d,n)=1, d | n + 4c, c | x^2, 1 <= c <= x,  x=(n+d)/4

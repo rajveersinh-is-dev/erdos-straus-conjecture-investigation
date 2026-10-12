@@ -17,7 +17,7 @@ Complete proofs of everything below are in `mathematics/proofs.md`.
 
 ## 1. The exact two-unit-fraction criterion
 
-> **Lemma 3 (PROVED HERE; formally verified in Lean — see `lean/`).**
+> **Lemma 3 (PROVED HERE; FORMALLY VERIFIED in Lean).**
 > For `gcd(a,b) = 1` and `a, b ≥ 1`:
 >
 >       `a/b = 1/y + 1/z` for some `1 ≤ y ≤ z`

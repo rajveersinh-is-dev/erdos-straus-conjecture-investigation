@@ -195,7 +195,8 @@ tests/           test_theorems.py  (25 tests, exact arithmetic)
 experiments/     exp01..exp05, all reproducible
 results/         sieve_summary.json
 paper/           main.tex (LaTeX mirror), main.md (readable version)
-lean/            ESCriterion.lean (formal proof of Lemma 3)
+lean/            ESCriterion.lean (formal proof of Lemma 3),
+                 AxiomAudit.lean, BUILD_STATUS.md
 docs/            reproducibility.md
 ```
 
@@ -205,7 +206,8 @@ docs/            reproducibility.md
   no Sage, no internet access needed.
 * Run the tests: `python tests/test_theorems.py` (or `python -m pytest tests/ -q`).
 * Run the experiments: `python experiments/exp01_baseline.py`, … `exp05`.
-* Lean (optional): `cd lean && lake build` — see `docs/reproducibility.md`.
+* Lean (optional): `cd lean && lake build && lake env lean AxiomAudit.lean` —
+  builds cleanly; see `lean/BUILD_STATUS.md` and `docs/reproducibility.md`.
 
 Full instructions, environment details and expected outputs:
 [`docs/reproducibility.md`](docs/reproducibility.md).

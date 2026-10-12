@@ -6,10 +6,11 @@ Running record of decisions, dead ends, and changes of strategy.
 
 ## Session 1 — setup
 
-**Environment.** Windows; Python 3.14.6; `sympy`, `networkx`; Lean 4.34.1 with
-`lake`; **no LaTeX toolchain** (`pdflatex` absent) — this is why the paper is
-supplied as both `paper/main.tex` (source, not compiled here) and
-`paper/main.md`. Git 2.53, `gh` 2.96 authenticated as `rajveersinh-is-dev`.
+**Environment.** Windows; Python 3.14.6; `sympy`, `networkx`; Lean
+`leanprover/lean4:v4.35.0-rc4` with `lake` 5.0.0; **no LaTeX toolchain**
+(`pdflatex` absent) — this is why the paper is supplied as both
+`paper/main.tex` (source, not compiled here) and `paper/main.md`. Git 2.53,
+`gh` 2.96 authenticated as `rajveersinh-is-dev`.
 
 **Repository.** `erdos-straus-conjecture-investigation`, created public, pushed
 to `main`.
@@ -93,6 +94,34 @@ re-derived after the rebuild, not carried over.
   silently assumed it.
 * Rewrote the closing argument of Theorem 8, which had a tangle of case
   analysis; it is now two lines.
+
+## Session 2 — the Lean file finally compiles
+
+The formalisation of Lemma 3 went through three real type errors, each of which
+was a genuine mistake rather than a toolchain quirk:
+
+1. `h.mul_right t` on `Dvd.dvd a (b * c)` in `dvd_of_dvd_mul_of_bezout` —
+   the orientation of the divisibility product lemma was backwards.
+2. In `witness_gives_solution`, showing `v > 0` from `b² = u*v` with `u > 0`.
+   The first attempt compared `v * u ≤ 0 * u`, which Lean normalises to
+   `u * v ≤ u * 0`; the fix is to compare `u * v ≤ u * 0`, rewrite it to
+   `u * v ≤ 0` via `mul_zero`, and push it through `hv`.
+3. `rw [← hv]` was used where `rw [hv]` was needed (rewriting *into* the goal
+   vs. *into* the hypothesis).
+
+Also a linter warning about an unused hypothesis `hz` in
+`solution_gives_witness`, silenced by renaming it `_hz` — no proof content was
+touched. None of these was papered over with `sorry`.
+
+The blocking obstacle before this was not the mathematics but the
+`lake-manifest.json`/`lakefile.toml` mismatch, which silently rebuilt Mathlib
+from source (3137 modules). Once that finished, each iteration on the file took
+about half a minute.
+
+**Decision on scope, restated.** Only Lemma 3 is formalised. Theorems 7–14 stay
+`PROVED HERE` on the strength of the written proofs plus the test suite. The
+Lean file does *not* verify that `src/es_theory.py` transcribes the criterion
+faithfully; that remains the job of `tests/test_theorems.py`.
 
 ## Open threads (not pursued)
 
