@@ -1,0 +1,10 @@
+name = "eslean"
+defaultTargets = ["ESCriterion"]
+
+[[lean_lib]]
+name = "ESCriterion"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+version = "git#master"

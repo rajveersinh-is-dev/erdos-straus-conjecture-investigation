@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+lean/.lake/
+lean/build/
+lean/cache_out.txt
+lean/cache_err.txt
+lean/build_out.txt
+lean/build_err.txt
+lean/Test.lean
+lean/ESBuild.lean

@@ -1,0 +1,7 @@
+Current branch: HEAD
+Using cache from origin: (some leanprover-community/mathlib4)
+Attempting to download 9024 file(s) from leanprover-community/mathlib4 cache at https://cache.mathlib.org/mathlib4-master
+Decompressed 9024 file(s)
+Decompressing 8620 file(s) (404 already decompressed)
+Decompressed in 2970 ms
+Completed successfully!
