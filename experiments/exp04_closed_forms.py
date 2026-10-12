@@ -6,17 +6,21 @@ F3' : d = 3 mod 4, gcd(d,n)=1, d | n + c,  c | n^2, 1 <= c <= n
 
 The c = 1 instances are the closed-form identities of Corollary 13.
 """
+from __future__ import annotations
+
+from fractions import Fraction
 import os
 import sys
-from fractions import Fraction
+
+from es_sieve import (hard_core_values, factorise, divisors_of_factors)  # noqa: E402
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
-from es_sieve import (hard_core_values, factorise, divisors_of_factors)  # noqa: E402
 
 LIMIT = 300_000
 
 
-def F1(n, d, c):
+def F1(n, d, c) -> tuple:
     """The solution produced by family F1', or None."""
     if (d + 1) % 4 or d < 3 or n % 4 != 1 or factorise(n).get(d, 0):
         return None
@@ -33,7 +37,7 @@ def F1(n, d, c):
     return (x, y, z)
 
 
-def F3(n, d, c):
+def F3(n, d, c) -> tuple:
     """The solution produced by family F3', or None."""
     if (d + 1) % 4 or d < 3 or n % 4 != 1 or factorise(n).get(d, 0):
         return None
@@ -49,6 +53,13 @@ def F3(n, d, c):
 
 
 def verify(t, n):
+    """Check whether the condition holds.
+    
+    Args:
+        t:
+        n:
+    
+    """
     x, y, z = t
     assert x <= y <= z, (n, t)
     assert Fraction(1, x) + Fraction(1, y) + Fraction(1, z) == Fraction(4, n), (n, t)
@@ -81,7 +92,16 @@ print("\n### 3. coverage of the hard core by the closed forms")
 H = hard_core_values(LIMIT)
 
 
-def covered_F1(n):
+def covered_F1(n) -> bool:
+    """Covered F1.
+    
+    Args:
+        n:
+    
+    Returns:
+        bool: Result of type bool
+    
+    """
     for d in divisors_of_factors(factorise(n + 4)):
         if d % 4 == 3 and F1(n, d, 1):
             return True
@@ -98,13 +118,23 @@ def covered_F1(n):
     return False
 
 
-def covered_F3(n):
+def covered_F3(n) -> bool:
+    """Covered F3.
+    
+    Args:
+        n:
+    
+    Returns:
+        bool: Result of type bool
+    
+    """
     fn = factorise(n)
     for c in divisors_of_factors(fn):
         for d in divisors_of_factors(factorise(n + c)):
             if d % 4 == 3 and F3(n, d, c):
                 return True
-    for c in divisors_of_factors({p: 2 * e for p, e in fn.items()}):
+    for c in divisors_of_factors({p:
+        2 * e for p, e in fn.items()}):
         if c > n:
             continue
         for d in divisors_of_factors(factorise(n + c)):
