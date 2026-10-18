@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from math import gcd, isqrt
 
+
 __all__ = ["sieve_primes", "factorise", "divisors_of_square", "divisors",
            "in_hard_core", "es_via_j", "es_via_k", "minimal_k",
            "solution_count", "hard_core_values", "AB_of", "is_prime",

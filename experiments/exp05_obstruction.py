@@ -4,6 +4,8 @@ Measures how much of the hard core survives the proved necessary conditions
 (O1)-(O3) for being a counterexample, and locates the instances of H with the
 largest minimal admissible k (mu).
 """
+from __future__ import annotations
+
 import json
 import os
 import sys
@@ -21,15 +23,42 @@ H = hard_core_values(OBSTR)
 print(f"   hard-core values <= {OBSTR}: {len(H)}")
 
 
-def o1(n):   # every prime divisor of (n+3)/4 is 1 mod 3
+def o1(n):
+    """O1.
+    
+    Args:
+        n:
+    
+    Returns:
+        The computed result
+    
+    """
     return not any(p % 3 == 2 for p in factorise((n + 3) // 4))
 
 
-def o2(n):   # every odd prime divisor of n+1 is 1 mod 4
+def o2(n):
+    """O2.
+    
+    Args:
+        n:
+    
+    Returns:
+        The computed result
+    
+    """
     return not any(p % 4 == 3 for p in factorise(n + 1))
 
 
-def o3(n):   # every prime divisor of n+4 is 1 mod 4
+def o3(n):
+    """O3.
+    
+    Args:
+        n:
+    
+    Returns:
+        The computed result
+    
+    """
     return not any(p % 4 == 3 for p in factorise(n + 4))
 
 

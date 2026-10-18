@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "erdos_straus_conjecture_investigation"
+version = "1.0.0"
+description = "Mathematical investigation of the Erdős–Straus conjecture: exact criterion, hard-core reduction, Type I/II dichotomy, and new parametric families."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "rajveersinh-is-dev"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+[project.urls]
+Homepage = "https://github.com/rajveersinh-is-dev/erdos-straus-conjecture-investigation"
+
+[tool.setuptools]
+py-modules = ['']
